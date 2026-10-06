@@ -2,6 +2,8 @@
 
 An [Agent Skill](https://agentskills.io/specification) that helps AI assistants turn complex topics and AI outputs into explanations people can actually understand: plain text, diagrams, interactive single-file HTML, or video storyboards.
 
+**New here?** Download [docs/index.html](docs/index.html) and open it in a browser for an interactive overview of what the skill does, with before-and-after examples. (Viewing the file on GitHub shows only its source code.)
+
 Inspired by [Andrej Karpathy's post](https://x.com/karpathy/status/2105819303471976479) on spending more time understanding LLM outputs through clearer writing (such as [ASD-STE100 Simplified Technical English](https://www.asd-ste100.org/about_STE.html)), diagrams, interactive pages, and explainer videos. This project is not affiliated with or endorsed by Andrej Karpathy or ASD.
 
 ## What it does
@@ -27,14 +29,31 @@ Inspired by [Andrej Karpathy's post](https://x.com/karpathy/status/2105819303471
 ```
 understanding-studio/
 ├── SKILL.md                      # Triggers, rules, and workflow
+├── README.md
+├── LICENSE
+├── CONTRIBUTING.md               # How to contribute and report test results
+├── SECURITY.md                   # Privacy, safety boundaries, and reporting
 ├── references/
 │   ├── formats.md                # Text, diagram, HTML, and Obsidian rules
 │   ├── video.md                  # Storyboard, voice, rendering, and cost rules
 │   ├── quality.md                # Checklist and regression cases
 │   └── sources.md                # Inspiration and design boundaries
-└── assets/
-    └── explainer-template.html   # Offline interactive lesson starter
+├── assets/
+│   └── explainer-template.html   # Offline interactive lesson starter
+├── docs/
+│   ├── index.html                # Interactive overview of the skill
+│   └── QUICKSTART.md             # First requests and common problems
+└── examples/
+    └── packet-loss-lesson.md     # Lesson design specification
 ```
+
+## Documentation
+
+- [Interactive overview](docs/index.html): download and open in a browser.
+- [Quick start](docs/QUICKSTART.md): first requests, prompts, and troubleshooting.
+- [Worked example specification](examples/packet-loss-lesson.md): how one mechanism becomes an interactive lesson.
+- [Contributing](CONTRIBUTING.md): how to propose changes and report reproducible test results.
+- [Security and privacy](SECURITY.md): safety boundaries and how to raise a concern.
 
 ## Install
 
@@ -54,7 +73,7 @@ Hosts differ, so check your tool's documentation for the exact skill folder.
 
 ## Status
 
-Version 1.0.0. The package files, required metadata, relative links, and the template's basic static properties were checked. It has not yet been tested for triggering behaviour across agent platforms, validated with the official `skills-ref` tool, or tested in a browser for visuals and keyboard use. Issues and pull requests are welcome.
+Version 1.0.0. The package files, required metadata, relative links, and the template's basic static properties were checked. The data behind the overview page was checked for completeness with Node.js. It has not yet been tested for triggering behaviour across agent platforms, validated with the official `skills-ref` tool, or tested in a browser for visuals and keyboard use. Issues and pull requests are welcome.
 
 This skill is a set of instructions and resources. It does not add search, speech, video, or browser capabilities to an agent.
 

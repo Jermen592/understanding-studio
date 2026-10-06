@@ -1,0 +1,311 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Understanding Studio: an Agent Skill that makes AI answers easier to understand</title>
+<meta name="description" content="Understanding Studio is an Agent Skill that helps AI assistants explain complex topics clearly, using plain text, diagrams, interactive HTML, or video storyboards.">
+<style>
+:root{color-scheme:light;--ink:#14212e;--muted:#475569;--line:#cbd5e1;--accent:#075985;--accent-soft:#e6f1f8;--bad:#991b1b;--bad-soft:#fee2e2;--ok:#166534;--ok-soft:#dcfce7;--warn:#92400e;--warn-soft:#fef3c7;--paper:#f4f7fb}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:var(--paper);color:var(--ink);font-family:system-ui,-apple-system,"Segoe UI",sans-serif;line-height:1.7}
+a{color:var(--accent)}
+main{max-width:1040px;margin:auto;padding:20px 18px 72px}
+.hero,section{background:#fff;border:1px solid var(--line);border-radius:18px;padding:26px;margin:18px 0}
+.hero{padding:34px 26px}
+h1{font-size:clamp(1.9rem,5vw,3rem);line-height:1.15;margin:.2em 0 .4em}
+h2{font-size:1.45rem;line-height:1.3;margin:0 0 .4em}
+h3{font-size:1.05rem;margin:.8em 0 .3em}
+.eyebrow{color:var(--accent);font-weight:700;letter-spacing:.04em;text-transform:uppercase;font-size:.85rem}
+.lead{font-size:1.15rem;max-width:46em}
+.muted{color:var(--muted)}
+.small{font-size:.9rem}
+.pills{display:flex;flex-wrap:wrap;gap:8px;margin:14px 0 0;padding:0;list-style:none}
+.pills li{background:var(--accent-soft);border-radius:99px;padding:4px 12px;font-size:.9rem}
+nav ul{display:flex;flex-wrap:wrap;gap:6px 18px;list-style:none;padding:0;margin:18px 0 0}
+.note{border-left:4px solid var(--accent);background:var(--accent-soft);padding:10px 14px;border-radius:0 10px 10px 0}
+.warn{border-left:4px solid var(--warn);background:var(--warn-soft);padding:10px 14px;border-radius:0 10px 10px 0}
+button{font:inherit;border:1px solid var(--accent);border-radius:10px;padding:8px 14px;background:#fff;color:var(--accent);cursor:pointer}
+button:hover,button[aria-pressed="true"]{background:var(--accent);color:#fff}
+button.primary{background:var(--accent);color:#fff}
+:focus-visible{outline:3px solid #b45309;outline-offset:3px}
+.row{display:flex;flex-wrap:wrap;gap:10px}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:18px}
+.card{border:1px solid var(--line);border-radius:14px;padding:16px 18px;background:#f8fafc}
+.card.bad{background:var(--bad-soft);border-color:#fca5a5}
+.card.good{background:var(--ok-soft);border-color:#86efac}
+.tagline{font-weight:700;font-size:.85rem;text-transform:uppercase;letter-spacing:.05em}
+.sample{font-family:ui-monospace,Consolas,monospace;font-size:1rem;line-height:1.6}
+table{width:100%;border-collapse:collapse;font-size:.95rem}
+th,td{border-bottom:1px solid var(--line);padding:8px;text-align:left;vertical-align:top}
+th{background:#f6f8fa}
+code{font-family:ui-monospace,Consolas,monospace;background:#eef2f6;padding:0 4px;border-radius:4px}
+pre{white-space:pre-wrap;word-break:break-word;background:#0f172a;color:#e2e8f0;border-radius:12px;padding:14px 16px;margin:8px 0;font-size:.95rem}
+.preview{border:1px dashed var(--line);border-radius:12px;padding:14px;background:#fff;margin-top:12px}
+.boxes{display:flex;flex-wrap:wrap;align-items:center;gap:6px}
+.box{border:2px solid #64748b;border-radius:8px;padding:4px 10px;background:var(--accent-soft)}
+.mockslider{display:flex;align-items:center;gap:10px}
+.mockslider i{display:block;height:8px;border-radius:99px;background:linear-gradient(90deg,var(--accent) 60%,#cbd5e1 60%);flex:1}
+.strip{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.strip div{border:1px solid var(--line);border-radius:8px;padding:6px 8px;background:#f1f5f9;font-size:.85rem}
+.steps{display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:8px}
+.steps button{text-align:left;padding:8px 10px}
+.stepbody{margin-top:14px;min-height:7em}
+ul.clean{padding-left:1.2em;margin:.3em 0}
+ul.clean li{margin:.3em 0}
+details{border-top:1px solid var(--line);padding:12px 0}
+summary{cursor:pointer;font-weight:600}
+.pairs li{margin:.3em 0}
+.copied{margin-left:8px;color:var(--ok);font-weight:600}
+footer{font-size:.9rem;color:var(--muted);margin-top:24px}
+@media(max-width:720px){.grid2{grid-template-columns:1fr}.hero,section{padding:18px}}
+@media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}*{transition:none!important;animation:none!important}}
+</style>
+</head>
+<body>
+<main>
+
+<header class="hero">
+<p class="eyebrow">Agent Skill · MIT license</p>
+<h1>Understanding Studio</h1>
+<p class="lead">AI assistants often answer with dense walls of text. This skill teaches an assistant to <strong>explain things so a reader can actually understand them</strong>: it picks the simplest useful format (plain text, a diagram, an interactive page, or a video storyboard), checks the facts first, and says honestly what it did and did not test.</p>
+<ul class="pills">
+<li>Not an app. A set of instructions your AI agent loads.</li>
+<li>Works only in hosts that support Agent Skills</li>
+<li>No paid tools without asking you</li>
+</ul>
+<nav aria-label="On this page"><ul>
+<li><a href="#before-after">See the difference</a></li>
+<li><a href="#chooser">What it produces</a></li>
+<li><a href="#how">How it works</a></li>
+<li><a href="#rules">Safety rules</a></li>
+<li><a href="#try">Try it</a></li>
+<li><a href="#limits">Honest limits</a></li>
+</ul></nav>
+</header>
+
+<section id="before-after" aria-labelledby="ba-h">
+<h2 id="ba-h">1. See the difference</h2>
+<p>The skill changes <em>how</em> an answer is written. Pick an example and switch between a typical dense answer and the skill's approach. These examples are illustrative.</p>
+<div class="row" role="group" aria-label="Choose an example">
+<button type="button" data-ex="0" aria-pressed="true">Instruction: clear wording</button>
+<button type="button" data-ex="1" aria-pressed="false">Explanation: clear structure</button>
+</div>
+<div class="row" style="margin-top:12px" role="group" aria-label="Choose a version">
+<button type="button" data-ver="before" aria-pressed="true">Typical dense answer</button>
+<button type="button" data-ver="after" aria-pressed="false">With Understanding Studio</button>
+</div>
+<div id="ba-card" class="card bad" style="margin-top:14px" aria-live="polite">
+<p class="tagline" id="ba-tag"></p>
+<div id="ba-body" class="sample"></div>
+</div>
+<div id="ba-why" style="margin-top:12px"></div>
+<p class="small muted" id="ba-source"></p>
+</section>
+
+<section id="chooser" aria-labelledby="ch-h">
+<h2 id="ch-h">2. It chooses the right format</h2>
+<p>The skill does not turn every question into a web page or a video. It uses the default format below unless you ask for something else. Choose a kind of request.</p>
+<div class="row" id="ch-buttons" role="group" aria-label="Kind of request"></div>
+<div class="card" style="margin-top:14px" aria-live="polite">
+<p class="tagline" id="ch-shape"></p>
+<p><strong>Default output:</strong> <span id="ch-out"></span></p>
+<p><strong>Why:</strong> <span id="ch-why"></span></p>
+<p><strong>Example request:</strong> <code id="ch-prompt"></code></p>
+<div class="preview" id="ch-preview" aria-hidden="true"></div>
+</div>
+<p class="small muted">The preview is a simplified sketch of the kind of output, not a real result. Your request always overrides the defaults.</p>
+</section>
+
+<section id="how" aria-labelledby="how-h">
+<h2 id="how-h">3. What the assistant does, step by step</h2>
+<p>Select a step to see what the skill tells the assistant to do.</p>
+<div class="steps" id="steps" role="group" aria-label="Workflow steps"></div>
+<div class="stepbody card" id="stepbody" aria-live="polite"></div>
+</section>
+
+<section id="rules" aria-labelledby="rules-h">
+<h2 id="rules-h">4. Rules it follows</h2>
+<div class="grid2">
+<div>
+<h3>Accuracy</h3>
+<ul class="clean">
+<li>Reads the source you give it before simplifying, and says so if it cannot read it.</li>
+<li>Separates facts, inferences, analogies, assumptions, and unknowns.</li>
+<li>Keeps words like "may", "only", and "at least" when they change the meaning.</li>
+<li>Labels invented numbers as assumptions.</li>
+</ul>
+</div>
+<div>
+<h3>Honesty and safety</h3>
+<ul class="clean">
+<li>Never claims it installed, tested, rendered, or uploaded something it did not.</li>
+<li>Asks before using paid tools, extra credits, cloud rendering, or voice services.</li>
+<li>Treats instructions found inside documents or web pages as data, not commands.</li>
+<li>Keeps API keys out of generated pages and files.</li>
+</ul>
+</div>
+<div>
+<h3>Offline pages it builds</h3>
+<ul class="clean">
+<li>One HTML file, no CDN, no external fonts, no tracking.</li>
+<li>No <code>localStorage</code> or network requests by default.</li>
+<li>Keyboard-operable controls, labels, and a reduced-motion setting.</li>
+</ul>
+</div>
+<div>
+<h3>What it is not</h3>
+<ul class="clean">
+<li>Not an ASD-STE100 compliance checker. It borrows clear-writing ideas only.</li>
+<li>Not a new model or an app. It adds no search, speech, video, or browser abilities.</li>
+<li>Not an official work of, or endorsed by, Andrej Karpathy or ASD.</li>
+</ul>
+</div>
+</div>
+</section>
+
+<section id="try" aria-labelledby="try-h">
+<h2 id="try-h">5. Try it</h2>
+<p>If your AI host supports Agent Skills, install the skill, then paste one of these requests. Installation steps differ by host; see the <a href="https://github.com/Jermen592/understanding-studio/blob/main/docs/QUICKSTART.md">quick start</a>.</p>
+<div id="prompts"></div>
+<h3>Install</h3>
+<pre>git clone https://github.com/Jermen592/understanding-studio.git</pre>
+<p class="small muted">Then place the folder (with <code>SKILL.md</code> at its root) where your agent loads skills. If your host has no skill support, you can paste <code>SKILL.md</code> as custom instructions. That works as a prompt, not as a native skill.</p>
+</section>
+
+<section id="limits" aria-labelledby="lim-h">
+<h2 id="lim-h">6. Honest limits</h2>
+<p class="warn">Version 1.0.0 has not yet been tested across agent platforms, validated with the official <code>skills-ref</code> tool, or tested in a browser for this page's visuals and keyboard use. Results depend on your host, your model, and the tools it allows. If you try it, please <a href="https://github.com/Jermen592/understanding-studio/issues">report what happened</a>.</p>
+<p>Inspired by <a href="https://x.com/karpathy/status/2105819303471976479">Andrej Karpathy's post</a> about spending more time understanding LLM outputs through clearer writing, diagrams, interactive pages, and explainer videos. Background on <a href="https://www.asd-ste100.org/about_STE.html">ASD-STE100 Simplified Technical English</a>. Packaged in the <a href="https://agentskills.io/specification">Agent Skills format</a>.</p>
+</section>
+
+<footer>
+<a href="https://github.com/Jermen592/understanding-studio">GitHub repository</a> ·
+<a href="https://github.com/Jermen592/understanding-studio/blob/main/SKILL.md">SKILL.md</a> ·
+<a href="https://github.com/Jermen592/understanding-studio/blob/main/docs/QUICKSTART.md">Quick start</a> ·
+<a href="https://github.com/Jermen592/understanding-studio/blob/main/CONTRIBUTING.md">Contributing</a> ·
+<a href="https://github.com/Jermen592/understanding-studio/blob/main/SECURITY.md">Security</a> ·
+MIT license
+</footer>
+</main>
+
+<script>
+'use strict';
+const $=id=>document.getElementById(id);
+function el(tag,cls,text){const e=document.createElement(tag);if(cls)e.className=cls;if(text!==undefined)e.textContent=text;return e;}
+
+const EXAMPLES=[
+ {
+  before:'It is imperative that the operator ensures the hydraulic reservoir is replenished prior to commencing operation.',
+  after:'Make sure that the hydraulic reservoir is full before you start the operation.',
+  changes:[
+   ['"It is imperative that the operator ensures"','"Make sure". A direct command says who must act.'],
+   ['"is replenished"','"is full". A plainer word with one clear meaning.'],
+   ['"prior to commencing"','"before you start". Everyday words, active voice.'],
+   ['Result','One instruction, one action, and no guessing about who does it.']
+  ],
+  source:'Example adapted from a public ASD-STE100 overview sheet (asd-ste100.org). It shows the writing style the skill borrows from. It does not mean the skill certifies compliance.'
+ },
+ {
+  before:'Delivery rate, being the ratio of successful deliveries to attempts, may correlate with reliability, although inference regarding future behavior necessitates consideration of sample size and underlying model assumptions.',
+  after:'Answer: A delivery rate tells you what happened in one batch. It does not promise what happens next.\nStructure: Items sent, items delivered, delivered divided by sent.\nExample: 17 of 20 arrived, so this batch had 85.0% delivery.\nLimit: A 20-item batch gives weak evidence about the future.\nCheck: If 10 of 10 arrive, is the next batch guaranteed? No.',
+  changes:[
+   ['Answer first','The reader learns the point before the detail.'],
+   ['One idea per line','The long sentence is split into labelled parts.'],
+   ['A concrete example','Numbers the reader can follow (fictional, for illustration).'],
+   ['A limit and a check','The reader sees what the claim does not cover, and can test their understanding.']
+  ],
+  source:'Both versions are invented for illustration. The numbers are hypothetical.'
+ }
+];
+let exIndex=0, version='before';
+function renderBA(){
+ const ex=EXAMPLES[exIndex];
+ const card=$('ba-card');
+ card.className='card '+(version==='before'?'bad':'good');
+ $('ba-tag').textContent=version==='before'?'Typical dense answer':'With Understanding Studio';
+ const body=$('ba-body');body.replaceChildren();
+ ex[version].split('\n').forEach(line=>body.append(el('p',null,line)));
+ const why=$('ba-why');why.replaceChildren();
+ if(version==='after'){
+  why.append(el('h3',null,'What changed'));
+  const ul=el('ul','clean pairs');
+  ex.changes.forEach(c=>{const li=el('li');const b=el('strong',null,c[0]+': ');li.append(b,document.createTextNode(c[1]));ul.append(li);});
+  why.append(ul);
+ }
+ $('ba-source').textContent=ex.source;
+ document.querySelectorAll('[data-ex]').forEach(b=>b.setAttribute('aria-pressed',String(+b.dataset.ex===exIndex)));
+ document.querySelectorAll('[data-ver]').forEach(b=>b.setAttribute('aria-pressed',String(b.dataset.ver===version)));
+}
+document.querySelectorAll('[data-ex]').forEach(b=>b.addEventListener('click',()=>{exIndex=+b.dataset.ex;renderBA();}));
+document.querySelectorAll('[data-ver]').forEach(b=>b.addEventListener('click',()=>{version=b.dataset.ver;renderBA();}));
+
+const REQUESTS=[
+ {label:'One concept',shape:'A single concept or short question',out:'Plain text, plus one example only if it helps.',why:'A short question needs a short answer. A big page would add cost without adding understanding.',prompt:'Use understanding-studio to explain what an API is to a beginner.',preview:'text'},
+ {label:'A process or structure',shape:'A process, cause and effect, hierarchy, or component relationship',out:'Plain text plus a diagram.',why:'Relationships between parts are easier to see than to read.',prompt:'Use understanding-studio to explain how a web request reaches a server, with a diagram.',preview:'diagram'},
+ {label:'Comparing options',shape:'A comparison of several options',out:'A table, plus a decision diagram only if there are conditional branches.',why:'Side-by-side facts belong in rows and columns.',prompt:'Use understanding-studio to compare these three options for me.',preview:'table'},
+ {label:'A mechanism to explore',shape:'Several linked concepts, or a mechanism that changing a parameter can reveal',out:'An interactive single-file HTML page.',why:'When changing one input shows how the result changes, the reader learns by doing.',prompt:'Use understanding-studio to turn this topic into a single offline HTML lesson with a diagram, a hands-on example, misconceptions, and a comprehension check.',preview:'slider'},
+ {label:'A video explainer',shape:'Change over time, motion, or continuous change, and you ask for video',out:'A storyboard and narration. It produces video only with suitable tools and your approval.',why:'Planning comes first, and paid or cloud tools need your permission.',prompt:'Use understanding-studio to storyboard a 90-second explainer video. Do not voice, render, or use paid credits.',preview:'strip'},
+ {label:'Obsidian study notes',shape:'You explicitly ask for Obsidian study notes',out:'Markdown with a decision flowchart and a concept map (two Mermaid diagrams).',why:'Notes with both a "how to decide" view and a "how it connects" view are easier to review later.',prompt:'Use understanding-studio to make Obsidian notes on this topic with a decision flowchart and a concept map.',preview:'notes'}
+];
+function previewNode(kind){
+ const d=el('div');
+ if(kind==='text'){d.append(el('p',null,'A short direct answer in two sentences.'),el('p','muted','Optional: one example the reader can follow.'));}
+ if(kind==='diagram'){const b=el('div','boxes');['Request','Server','Response'].forEach((t,i)=>{if(i)b.append(el('span',null,'→'));b.append(el('span','box',t));});d.append(b,el('p','muted small','Plus a few sentences explaining each arrow.'));}
+ if(kind==='table'){const t=el('table');const h=el('tr');['','Option A','Option B','Option C'].forEach(x=>h.append(el('th',null,x)));t.append(h);['Cost','Setup','Best for'].forEach(r=>{const tr=el('tr');tr.append(el('td',null,r));for(let i=0;i<3;i++)tr.append(el('td','muted','…'));t.append(tr);});d.append(t);}
+ if(kind==='slider'){const m=el('div','mockslider');m.append(el('span',null,'Change a value'),el('i'));m.append(el('span',null,'See the result update'));d.append(m,el('p','muted small','Plus a diagram, common misconceptions, and answer checks.'));}
+ if(kind==='strip'){const s=el('div','strip');['Shot 1: idea','Shot 2: example','Shot 3: limits'].forEach(t=>s.append(el('div',null,t)));d.append(s,el('p','muted small','Each shot lists visuals, narration, and any source or assumption.'));}
+ if(kind==='notes'){const b=el('div','boxes');b.append(el('span','box','Decision flowchart'),el('span',null,'+'),el('span','box','Concept map'));d.append(b);}
+ return d;
+}
+function renderRequest(i){
+ const r=REQUESTS[i];
+ $('ch-shape').textContent='Your request: '+r.shape;
+ $('ch-out').textContent=r.out;
+ $('ch-why').textContent=r.why;
+ $('ch-prompt').textContent=r.prompt;
+ $('ch-preview').replaceChildren(previewNode(r.preview));
+ document.querySelectorAll('#ch-buttons button').forEach((b,j)=>b.setAttribute('aria-pressed',String(i===j)));
+}
+REQUESTS.forEach((r,i)=>{const b=el('button',null,r.label);b.type='button';b.setAttribute('aria-pressed','false');b.addEventListener('click',()=>renderRequest(i));$('ch-buttons').append(b);});
+renderRequest(0);
+
+const STEPS=[
+ ['Define the goal','Finds the topic, the reader\'s level, and the core question. Writes one testable goal, for example "the reader can say when each option applies". Asks only the minimum questions needed.'],
+ ['Verify, then simplify','Reads any link or file you gave it first. Checks public facts with research tools when available. Keeps facts, inferences, analogies, assumptions, and unknowns separate. Does not hide weak evidence behind polished visuals.'],
+ ['Choose the format','Uses the table in section 2. A single concept stays plain text. A process gets a diagram. A mechanism may become an interactive page. A video starts as a storyboard.'],
+ ['Build the skeleton','Answer first in one or two sentences. Then the overall structure, one concrete example, one misconception or limit, a way to judge or act, and for full lessons one to three comprehension checks.'],
+ ['Write clearly','One idea per sentence. Active voice. The same name for the same thing. Conditions before actions, warnings before the dangerous step. Technical precision stays, and analogies are marked as analogies.'],
+ ['Produce the artifact','Adapts the offline template or writes the diagram, notes, or storyboard. If it has no file tool, browser, or video renderer, it says so and hands you code or a plan instead.'],
+ ['Check and deliver','Checks meaning and data first, then interaction and visuals. Tells you what the artifact is, how to open it, and which checks were not run.']
+];
+function renderStep(i){
+ const body=$('stepbody');body.replaceChildren(el('h3',null,(i+1)+'. '+STEPS[i][0]),el('p',null,STEPS[i][1]));
+ document.querySelectorAll('#steps button').forEach((b,j)=>b.setAttribute('aria-pressed',String(i===j)));
+}
+STEPS.forEach((s,i)=>{const b=el('button',null,(i+1)+'. '+s[0]);b.type='button';b.setAttribute('aria-pressed','false');b.addEventListener('click',()=>renderStep(i));$('steps').append(b);});
+renderStep(0);
+
+const PROMPTS=[
+ ['Explain something clearly','Use understanding-studio to explain this topic to a beginner. Answer the core question first. Choose the simplest useful format. Keep the sources and say what is uncertain. Do not use paid tools.'],
+ ['Build an offline lesson','Use understanding-studio to turn this topic into one offline HTML file with an overall diagram, one hands-on example, common misconceptions, and comprehension checks. No CDN, no localStorage, no network requests. Tell me what you actually tested.'],
+ ['Plan a video','Use understanding-studio to storyboard a 90-second explainer video for this topic. Do not voice, render, or use paid credits.']
+];
+PROMPTS.forEach(p=>{
+ const wrap=el('div');wrap.append(el('h3',null,p[0]));
+ const pre=el('pre',null,p[1]);wrap.append(pre);
+ const btn=el('button',null,'Copy');btn.type='button';
+ const msg=el('span','copied');msg.setAttribute('role','status');
+ btn.addEventListener('click',()=>{
+  const done=ok=>{msg.textContent=ok?'Copied':'Select the text and press Ctrl+C or Cmd+C';};
+  if(navigator.clipboard&&navigator.clipboard.writeText){navigator.clipboard.writeText(p[1]).then(()=>done(true),()=>{selectNode(pre);done(false);});}
+  else{selectNode(pre);done(false);}
+ });
+ wrap.append(btn,msg);$('prompts').append(wrap);
+});
+function selectNode(n){const r=document.createRange();r.selectNodeContents(n);const s=window.getSelection();s.removeAllRanges();s.addRange(r);}
+renderBA();
+</script>
+</body>
+</html>
